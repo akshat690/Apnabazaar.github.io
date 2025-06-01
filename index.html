@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Apna Bazaar - Your Trusted Online Store</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      scroll-behavior: smooth;
+    }
+    body {
+      background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+      min-height: 100vh;
+      color: #333;
+      line-height: 1.6;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding-bottom: 60px; /* footer space */
+    }
+    header {
+      background: #003366;
+      width: 100%;
+      padding: 1rem 2rem;
+      color: white;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    .logo {
+      font-weight: 900;
+      font-size: 1.8rem;
+      letter-spacing: 2px;
+      color: #f9a825;
+      cursor: pointer;
+      user-select: none;
+      text-shadow: 1px 1px 4px #000c;
+      flex-shrink: 0;
+    }
+    nav {
+      display: flex;
+      gap: 1.2rem;
+      align-items: center;
+      flex-wrap: wrap;
+      flex-shrink: 1;
+      overflow-x: auto;
+    }
+    nav button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      position: relative;
+      padding: 0.3em 0.8em;
+      border-radius: 6px;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease;
+      white-space: nowrap;
+    }
+    nav button:hover,
+    nav button.active {
+      background: #f9a825;
+      color: #003366;
+      box-shadow: 0 0 8px #f9a825aa;
+    }
+    main {
+      max-width: 1200px;
+      width: 100%;
+      background: white;
+      margin: 2rem auto 4rem;
+      padding: 2rem 2rem 3rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 24px rgba(0,0,0,0.1);
+      min-height: 70vh;
+      position: relative;
+    }
+    section {
+      display: none;
+      animation: fadein 0.7s ease forwards;
+    }
+    section.active {
+      display: block;
+    }
+    @keyframes fadein {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    h1, h2, h3 {
+      color: #003366;
+      margin-bottom: 1rem;
+      text-shadow: 1px 1px 2px #a2a2a2;
+    }
+    .intro-text {
+      font-size: 1.1rem;
+      margin-bottom: 2rem;
+      font-weight: 500;
+      color: #555;
+    }
+    /* Search bar */
+    .search-bar {
+      margin-bottom: 1.8rem;
+      display: flex;
+      justify-content: center;
+      gap: 0.6rem;
+    }
+    .search-bar input[type="text"] {
+      flex-grow: 1;
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 2px solid #f9a825;
+      outline-offset: 2px;
+      transition: border-color 0.3s ease;
+    }
+    .search-bar input[type="text"]:focus {
+      border-color: #003366;
+    }
+    .search-bar select {
+      padding: 0.6rem 1rem;
+      font-size: 1rem;
+      border-radius: 12px;
+      border: 2px solid #f9a825;
+      background: white;
+      cursor: pointer;
+    }
+    /* Products grid */
+    .product-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 2rem;
+    }
+    .product-card {
+      background: #fefefe;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgb(0 0 0 / 0.1);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .product-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 14px 26px rgb(0 0 0 / 0.18);
+    }
+    .product-img {
+      width: 100%;
+      object-fit: contain;
+      max-height: 200px;
+      background: #fff9db;
+      padding: 1rem;
+      border-bottom: 1px solid #ddd;
+      transition: transform 0.4s ease;
+    }
+    .product-img:hover {
+      transform: scale(1.08);
+    }
+    .product-info {
+      padding: 1rem 1.2rem 1.5rem;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .product-name {
+      font-weight: 700;
+      font-size: 1.1rem;
+      margin-bottom: 0.5rem;
+      color: #222;
+    }
+    .product-price {
+      font-weight: 600;
+      color: #f57c00;
+      margin-bottom: 0.75rem;
+      font-size: 1.1rem;
+    }
+    .product-links {
+      margin-top: auto;
+    }
+    .product-links a {
+      display: inline-block;
+      text-decoration: none;
+      background: #003366;
+      color: white;
+      padding: 0.4em 0.8em;
+      margin-right: 0.6em;
+      border-radius: 5px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: background-color 0.3s ease;
+    }
+    .product-links a:hover {
+      background: #f9a825;
+      color: #003366;
+    }
+    /* About, Delivery, Support, Settings Content */
+    .content-text {
+      font-size: 1rem;
+      line-height: 1.5;
+      color: #444;
+      margin-bottom: 1rem;
+    }
+    /* Delivery partner box */
+    .partner-box {
+      background: #fff8e1;
+      border-left: 6px solid #f9a825;
+      padding: 1rem 1.5rem;
+      margin-top: 1rem;
+      border-radius: 6px;
+      box-shadow: 1px 1px 5px rgba(0,0,0,0.1);
+      font-weight: 600;
+      color: #5d4037;
+    }
+    /* Online payment badge */
+    .payment-info {
+      margin-top: 2rem;
+      background: #c8e6c9;
+      border-left: 8px solid #388e3c;
+      padding: 1rem 1.5rem;
+      font-weight: 700;
+      color: #2e7d32;
+      border-radius: 6px;
+      text-align: center;
+      box-shadow: 0 2px 8px #2e7d3250;
+    }
+    /* Footer */
+    footer {
+      width: 100%;
+      background: #003366;
+      color: white;
+      text-align: center;
+      padding: 1rem;
+      font-size: 0.9rem;
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      user-select: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+    footer .socials {
+      display: flex;
+      gap: 1em;
+    }
+    footer .socials a {
+      color: white;
+      font-size: 1.3rem;
+      text-decoration: none;
+      transition: color 0.3s ease;
+    }
+    footer .socials a:hover {
+      color: #f9a825;
+    }
+    /* Simple icons for footer */
+    .icon {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+      vertical-align: middle;
+    }
+    /* Responsive */
+    @media (max-width: 750px) {
+      nav {
+        justify-content: center;
+      }
+      main {
+        margin: 1rem;
+        padding: 1.5rem 1rem 2rem;
+      }
+      .product-grid {
+        grid-template-columns: 1fr;
+      }
+      footer {
+        flex-direction: column;
+        font-size: 0.8rem;
+        text-align: center;
+      }
+    }
+    /* Cart panel */
+    #cart-panel {
+      position: fixed;
+      top: 60px;
+      right: -350px;
+      width: 320px;
+      max-width: 90vw;
+      height: calc(100vh - 60px);
+      background: white;
+      box-shadow: -3px 0 15px rgba(0,0,0,0.3);
+      border-left: 4px solid #f9a825;
+      transition: right 0.35s ease;
+      z-index: 150;
+      display: flex;
+      flex-direction: column;
+    }
+    #cart-panel.open {
+      right: 0;
+    }
+    #cart-panel header {
+      background: #003366;
+      color: white;
+      padding: 1rem;
+      font-weight: 700;
+      font-size: 1.2rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    #cart-panel header button {
+      background: transparent;
+      border: none;
+      color: white;
+      font-size: 1.3rem;
+      font-weight: 900;
+      cursor: pointer;
+      line-height: 1;
+    }
+    #cart-items {
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 1rem;
+    }
+    .cart-empty {
+      text-align: center;
+      color: #666;
+      margin-top: 2rem;
+      font-style: italic;
+    }
+    .cart-item {
+      border-bottom: 1px solid #ddd;
+      padding: 0.6rem 0;
+      font-size: 0.95rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .cart-item-name {
+      flex-grow: 1;
+      font-weight: 600;
+      color: #003366;
+    }
+    .cart-item-remove {
+      background: #f44336;
+      border: none;
+      color: white;
+      padding: 0.1em 0.5em;
+      border-radius: 4px;
+      cursor: pointer;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    #cart-footer {
+      padding: 1rem;
+      border-top: 1px solid #ddd;
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #f57c00;
+    }
+    /* Button to toggle cart */
+    #cart-button {
+      position: fixed;
+      right: 1.2rem;
+      bottom: 70px;
+      background: #003366;
+      color: #f9a825;
+      border: none;
+      font-weight: 700;
+      padding: 0.8em 1.3em;
+      border-radius: 30px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.3);
+      cursor: pointer;
+      z-index: 200;
+      transition: background-color 0.3s ease;
+    }
+    #cart-button:hover {
+      background: #f9a825;
+      color: #003366;
+    }
+    /* FAQ styles */
+    .faq-item {
+      margin-bottom: 1rem;
+    }
+    .faq-question {
+      background: #f9a825;
+      color: #003366;
+      padding: 0.8rem 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 700;
+      user-select: none;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.15);
+      transition: background-color 0.3s ease;
+    }
+    .faq-question:hover {
+      background: #ffcc00;
+    }
+    .faq-answer {
+      padding: 0.6rem 1rem 0.6rem 1rem;
+      background: #fff8e1;
+      border-left: 4px solid #f9a825;
+      border-radius: 0 0 8px 8px;
+      display: none;
+      color: #555;
+    }
+    .faq-answer.show {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" tabindex="0" aria-label="Apna Bazaar Home">Apna Bazaar</div>
+    <nav aria-label="Primary Navigation">
+      <button id="nav-about" class="active" aria-current="page" aria-controls="section-about">About</button>
+      <button id="nav-menu" aria-controls="section-menu">Menu</button>
+      <button id="nav-support" aria-controls="section-support">Support</button>
+      <button id="nav-settings" aria-controls="section-settings">Settings</button>
+      <button id="nav-cart" aria-controls="cart-panel" aria-haspopup="true" aria-expanded="false">Cart 🛒</button>
+    </nav>
+  </header>
+  <main>
+    <!-- About Section -->
+    <section id="section-about" class="active" aria-labelledby="nav-about" tabindex="0">
+      <h1>Welcome to Apna Bazaar!</h1>
+      <p class="intro-text">
+        Your trusted online store for authentic branded products. Explore 
+        premium items from Wow, Garnier, Himalaya Baba Ram Dev, Lakme, Mama Earth, Ponds and more.
+      </p>
+      <p class="content-text">
+        At Apna Bazaar, we believe in quality, affordability, and seamless shopping experience.
+        Enjoy quick delivery with our reliable partners and secure online payments available exclusively in Raipur.
+      </p>
+      <div class="partner-box" aria-label="Delivery partners">
+        <h3>Our Delivery Partners</h3>
+        <ul>
+          <li>FedEx</li>
+          <li>Delhivery</li>
+          <li>Blue Dart</li>
+          <li>DTDC</li>
+          <li>Local Raipur Express</li>
+        </ul>
+      </div>
+      <div class="payment-info" aria-live="polite">
+        Online Payment Available <strong>Only in Raipur</strong> for your safety and convenience.
+      </div>
+    </section>
+
+    <!-- Menu Section with search/filter -->
+    <section id="section-menu" aria-labelledby="nav-menu" tabindex="0">
+      <h2>Our Featured Products</h2>
+
+      <div class="search-bar" role="search" aria-label="Search and filter products">
+        <input type="text" id="search-input" placeholder="Search products..." aria-label="Search products by name" />
+        <select id="brand-filter" aria-label="Filter products by brand">
+          <option value="all" selected>All Brands</option>
+          <option value="Wow">Wow</option>
+          <option value="Garnier">Garnier</option>
+          <option value="Himalaya">Himalaya</option>
+          <option value="Lakme">Lakme</option>
+          <option value="Mamaearth">Mamaearth</option>
+          <option value="Ponds">Ponds</option>
+        </select>
+      </div>
+
+      <div class="product-grid" role="list" id="product-grid">
+        <!-- Products added via JS -->
+      </div>
+    </section>
+
+    <!-- Support Section (FAQ) -->
+    <section id="section-support" aria-labelledby="nav-support" tabindex="0">
+      <h2>Support & FAQs</h2>
+
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq1-answer" id="faq1-question">How can I place an order?</button>
+        <div class="faq-answer" id="faq1-answer" role="region" aria-labelledby="faq1-question">
+          You can browse products in the Menu, add them to your Cart, and proceed with checkout. We accept online payments only in Raipur.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq2-answer" id="faq2-question">Which delivery partners do you work with?</button>
+        <div class="faq-answer" id="faq2-answer" role="region" aria-labelledby="faq2-question">
+          We collaborate with FedEx, Delhivery, Blue Dart, DTDC, and local Raipur Express to ensure timely delivery.
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq3-answer" id="faq3-question">Is online payment secure?</button>
+        <div class="faq-answer" id="faq3-answer" role="region" aria-labelledby="faq3-question">
+          Absolutely. We use trusted payment gateways and security protocols for secure online payments (only available in Raipur).
+        </div>
+      </div>
+      <div class="faq-item">
+        <button class="faq-question" aria-expanded="false" aria-controls="faq4-answer" id="faq4-question">Can I get delivery outside Raipur?</button>
+        <div class="faq-answer" id="faq4-answer" role="region" aria-labelledby="faq4-question">
+          Currently, online payments and deliveries are limited to Raipur only. For other locations, please contact support.
+        </div>
+      </div>
+    </section>
+
+    <!-- Settings Section -->
+    <section id="section-settings" aria-labelledby="nav-settings" tabindex="0">
+      <h2>Settings</h2>
+      <p class="content-text">
+        Customize your shopping experience:
+      </p>
+      <ul class="content-text" style="list-style: inside disc;">
+        <li>Choose your preferred delivery address in Raipur.</li>
+        <li>Set notifications for discounts and offers.</li>
+        <li>Manage payment options and security settings.</li>
+      </ul>
+      <p class="content-text" style="margin-top: 1rem;">
+        We are continuously working to improve your experience. Stay tuned for more exciting features!
+      </p>
+    </section>
+  </main>
+
+  <!-- Cart Panel -->
+  <aside id="cart-panel" aria-label="Shopping cart" aria-hidden="true">
+    <header>
+      Shopping Cart
+      <button aria-label="Close cart panel" id="cart-close-button">&times;</button>
+    </header>
+    <div id="cart-items" role="list" aria-live="polite" aria-relevant="additions removals">
+      <p class="cart-empty">Your cart is empty.</p>
+    </div>
+    <div id="cart-footer"></div>
+  </aside>
+  <button id="cart-button" aria-haspopup="true" aria-expanded="false" aria-controls="cart-panel" aria-label="Open shopping cart">Cart 🛒</button>
+
+  <footer>
+    <div>© 2024 Apna Bazaar — All Rights Reserved</div>
+    <div class="socials" aria-label="Social media links">
+      <a href="https://facebook.com/ApnaBazaar" target="_blank" rel="noopener noreferrer" aria-label="Facebook" title="Facebook" >
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22 12c0-5.522-4.477-10-10-10S2 6.478 2 12c0 5 3.657 9.127 8.438 9.876v-6.987h-2.54v-2.89h2.54V9.845c0-2.507 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.243 0-1.63.77-1.63 1.562v1.875h2.773l-.443 2.89h-2.33v6.987C18.343 21.127 22 17 22 12z"/>
+        </svg>
+      </a>
+      <a href="https://twitter.com/ApnaBazaar" target="_blank" rel="noopener noreferrer" aria-label="Twitter" title="Twitter">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M22.46 6c-.77.34-1.6.57-2.46.68a4.3 4.3 0 0 0 1.88-2.37 8.31 8.31 0 0 1-2.7 1.03 4.27 4.27 0 0 0-7.28 3.89 12.13 12.13 0 0 1-8.8-4.46 4.27 4.27 0 0 0 1.32 5.7 4.25 4.25 0 0 1-1.94-.54v.05a4.27 4.27 0 0 0 3.43 4.19 4.3 4.3 0 0 1-1.93.07 4.27 4.27 0 0 0 3.98 2.9A8.57 8.57 0 0 1 2 18.57 12.07 12.07 0 0 0 7.29 20c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.36-.02-.54a8.36 8.36 0 0 0 2.05-2.12z"/>
+        </svg>
+      </a>
+      <a href="https://instagram.com/ApnaBazaar" target="_blank" rel="noopener noreferrer" aria-label="Instagram" title="Instagram">
+        <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+          <path d="M7.5 2h9A5.52 5.52 0 0 1 22 7.5v9A5.52 5.52 0 0 1 16.5 22h-9A5.52 5.52 0 0 1 2 16.5v-9A5.52 5.52 0 0 1 7.5 2zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4zm4.5 2.75a3.75 3.75 0 1 1 0 7.5 3.75 3.75 0 0 1 0-7.5zm0 2a1.75 1.75 0 1 0 0 3.5 1.75 1.75 0 0 0 0-3.5zm3.75-.88a.875.875 0 1 1-1.75 0 .875.875 0 0 1 1.75 0z"/>
+        </svg>
+      </a>
+    </div>
+  </footer>
+
+  <script>
+    // Navigation tabs logic
+    const buttons = document.querySelectorAll('nav button:not(#nav-cart)');
+    const sections = {
+      'nav-about': document.getElementById('section-about'),
+      'nav-menu': document.getElementById('section-menu'),
+      'nav-support': document.getElementById('section-support'),
+      'nav-settings': document.getElementById('section-settings'),
+    };
+    buttons.forEach(button => {
+      button.addEventListener('click', () => {
+        // Remove active class and aria-current from all
+        buttons.forEach(btn => {
+          btn.classList.remove('active');
+          btn.removeAttribute('aria-current');
+        });
+        // Hide all sections
+        Object.values(sections).forEach(section => section.classList.remove('active'));
+        // Activate selected button and section
+        button.classList.add('active');
+        button.setAttribute('aria-current', 'page');
+        const section = sections[button.id];
+        if (section) {
+          section.classList.add('active');
+          section.focus();
+        }
+      });
+    });
+
+    // FAQ toggle logic
+    document.querySelectorAll('.faq-question').forEach(q => {
+      q.addEventListener('click', () => {
+        const expanded = q.getAttribute('aria-expanded') === 'true';
+        q.setAttribute('aria-expanded', !expanded);
+        const answer = document.getElementById(q.getAttribute('aria-controls'));
+        if (answer) answer.classList.toggle('show');
+      });
+    });
+
+    // Product data entries with added products
+    const products = [
+      // WOW
+      {
+        id: 1,
+        brand: "Wow",
+        name: "Wow Skin Science Vitamin C Face Serum",
+        priceRange: "₹599 - ₹750",
+        amazon: "https://www.amazon.in/Wow-Skin-Science-Vitamin-Serum/dp/B07WYTPH97",
+        flipkart: "https://www.flipkart.com/wow-skin-science-vitamin-c-face-serum/p/itmfae4a1ce7ec7a",
+        image: "https://m.media-amazon.com/images/I/61DUbOaw-3L._SL1500_.jpg",
+      },
+      {
+        id: 7,
+        brand: "Wow",
+        name: "Wow Skin Science Onion Black Seed Hair Oil",
+        priceRange: "₹500 - ₹620",
+        amazon: "https://www.amazon.in/Wow-Skin-Science-Onion-Hair/dp/B07FW2PP86",
+        flipkart: "https://www.flipkart.com/wow-skin-science-onion-black-seed-hair-oil/p/itm0227b58181ab8",
+        image: "https://m.media-amazon.com/images/I/71eXkYz0woL._SL1500_.jpg",
+      },
+      {
+        id: 9,
+        brand: "Wow",
+        name: "Wow Skin Science Moroccan Argan Oil",
+        priceRange: "₹699 - ₹850",
+        amazon: "https://www.amazon.in/Wow-Skin-Science-Moroccan-Argan/dp/B073ZNDZC2",
+        flipkart: "https://www.flipkart.com/wow-skin-science-moroccan-argan-oil/p/itmfhjvszpbvfkfr",
+        image: "https://m.media-amazon.com/images/I/61Y7b6HZ-0L._SL1500_.jpg",
+      },
+      // Garnier
+      {
+        id: 2,
+        brand: "Garnier",
+        name: "Garnier Skin Naturals Serum Cream",
+        priceRange: "₹299 - ₹400",
+        amazon: "https://www.amazon.in/Garnier-Light-Complete-Serum-Cream/dp/B0789HV8TT",
+        flipkart: "https://www.flipkart.com/garnier-skin-naturals-light-complete-serum-cream/p/itmfh63e24edb806",
+        image: "https://images-na.ssl-images-amazon.com/images/I/71vPzHU0kpL._SL1500_.jpg",
+      },
+      {
+        id: 8,
+        brand: "Garnier",
+        name: "Garnier Micellar Cleansing Water",
+        priceRange: "₹250 - ₹320",
+        amazon: "https://www.amazon.in/Garnier-Skin-Naturals-Micellar-Cleansing/dp/B01M0MR19B",
+        flipkart: "https://www.flipkart.com/garnier-micellar-cleansing-water/p/itmfbmctz2yxrbd3",
+        image: "https://m.media-amazon.com/images/I/71pKTIaAHVL._SL1500_.jpg",
+      },
+      {
+        id: 10,
+        brand: "Garnier",
+        name: "Garnier Light Complete Fairness Face Wash",
+        priceRange: "₹180 - ₹250",
+        amazon: "https://www.amazon.in/Garnier-Light-Complete-Fairness-Wash/dp/B07YDSFZ6K",
+        flipkart: "https://www.flipkart.com/garnier-light-complete-fairness-face-wash/p/itmb25a7bdafbbe4",
+        image: "https://m.media-amazon.com/images/I/61vCZxEGTvL._SL1200_.jpg",
+      },
+      // Himalaya
+      {
+        id: 3,
+        brand: "Himalaya",
+        name: "Himalaya Herbals Purifying Neem Face Wash",
+        priceRange: "₹125 - ₹180",
+        amazon: "https://www.amazon.in/Himalaya-Herbals-Purifying-Neem-Face/dp/B003BZW0JA",
+        flipkart: "https://www.flipkart.com/himalaya-herbals-purifying-neem-face-wash/p/itmequkkrgjzzfez",
+        image: "https://m.media-amazon.com/images/I/71j0B02kjDL._SL1500_.jpg",
+      },
+      {
+        id: 11,
+        brand: "Himalaya",
+        name: "Himalaya Nourishing Skin Cream",
+        priceRange: "₹90 - ₹130",
+        amazon: "https://www.amazon.in/Himalaya-Nourishing-Skin-Cream-50g/dp/B01MDNDJ30",
+        flipkart: "https://www.flipkart.com/himalaya-nourishing-skin-cream/p/itmexr5afztaxxbz",
+        image: "https://m.media-amazon.com/images/I/81nBvH12FwL._SL1500_.jpg",
+      },
+      {
+        id: 12,
+        brand: "Himalaya",
+        name: "Himalaya Anti-Dandruff Hair Oil",
+        priceRange: "₹100 - ₹180",
+        amazon: "https://www.amazon.in/Himalaya-Hair-Oil-Anti-Dandruff/dp/B00IR8H328",
+        flipkart: "https://www.flipkart.com/himalaya-anti-dandruff-hair-oil/p/itmfhzyasfyq2hba",
+        image: "https://m.media-amazon.com/images/I/41FYoyAVG+L.jpg",
+      },
+      // Lakme
+      {
+        id: 4,
+        brand: "Lakme",
+        name: "Lakme Absolute Matte Lip Color",
+        priceRange: "₹350 - ₹420",
+        amazon: "https://www.amazon.in/Lakme-Absolute-Matte-Lip-Color/dp/B00UO7G5V0",
+        flipkart: "https://www.flipkart.com/lakme-absolute-matte-lip-color/p/itmevutmgwccpvgf",
+        image: "https://m.media-amazon.com/images/I/61zvALPNrJS._SL1500_.jpg",
+      },
+      {
+        id: 13,
+        brand: "Lakme",
+        name: "Lakme 9 to 5 Weightless Mousse Foundation",
+        priceRange: "₹675 - ₹749",
+        amazon: "https://www.amazon.in/Lakme-Weightless-Mousse-Foundation-Classic/dp/B01MSDY03E",
+        flipkart: "https://www.flipkart.com/lakme-9-5-weightless-mousse-foundation/p/itmfu9w2hbmtwtpf",
+        image: "https://m.media-amazon.com/images/I/61FzuVEhxaL._SL1500_.jpg",
+      },
+      {
+        id: 14,
+        brand: "Lakme",
+        name: "Lakme Eyeconic Kajal",
+        priceRange: "₹90 - ₹120",
+        amazon: "https://www.amazon.in/Lakme-Eyeconic-Kajal-Black/dp/B076B63YNH",
+        flipkart: "https://www.flipkart.com/lakme-eyeconic-kajal/p/itmfhfv4ytwfdvkr",
+        image: "https://m.media-amazon.com/images/I/61mVMBjGZ7L._SL1500_.jpg",
+      },
+      // Mamaearth
+      {
+        id: 5,
+        brand: "Mamaearth",
+        name: "Mamaearth Vitamin C Serum",
+        priceRange: "₹799 - ₹899",
+        amazon: "https://www.amazon.in/Mamaearth-Vitamin-Serum-Lightening-Serums/dp/B07ST4CTX1",
+        flipkart: "https://www.flipkart.com/mamaearth-vitamin-c-serum/p/itmffxyzwvyzy59k",
+        image: "https://m.media-amazon.com/images/I/61z7beoZrLL._SL1500_.jpg",
+      },
+      {
+        id: 15,
+        brand: "Mamaearth",
+        name: "Mamaearth Onion Hair Oil",
+        priceRange: "₹325 - ₹400",
+        amazon: "https://www.amazon.in/Mamaearth-Hair-Oil-Onion-Strengthens/dp/B07KKKTW5Y",
+        flipkart: "https://www.flipkart.com/mamaearth-onion-hair-oil-strengthens-hair/p/itm3343b6c1c5d43",
+        image: "https://m.media-amazon.com/images/I/61+oU+hve-L._SL1200_.jpg",
+      },
+      {
+        id: 16,
+        brand: "Mamaearth",
+        name: "Mamaearth Ubtan Face Mask",
+        priceRange: "₹349 - ₹450",
+        amazon: "https://www.amazon.in/Mamaearth-Natural-Ubtan-Turmeric-Face/dp/B07BXC4C6X",
+        flipkart: "https://www.flipkart.com/mamaearth-natural-ubtan-turmeric-brightening-glow-face-mask/p/itmfxen8ytppr8ms",
+        image: "https://m.media-amazon.com/images/I/71bzvGEVHcL._SL1500_.jpg",
+      },
+      // Ponds
+      {
+        id: 6,
+        brand: "Ponds",
+        name: "Pond's White Beauty Spot-less Fairness Cream",
+        priceRange: "₹110 - ₹150",
+        amazon: "https://www.amazon.in/Ponds-White-Beauty-Spot-less-Fairness/dp/B01D62ZM18",
+        flipkart: "https://www.flipkart.com/ponds-white-beauty-spot-less-fairness-cream/p/itmfh54ef453ca1e",
+        image: "https://m.media-amazon.com/images/I/71xJTAiaEcL._SL1500_.jpg",
+      },
+      {
+        id: 17,
+        brand: "Ponds",
+        name: "Pond's Men Energy Charge Face Wash",
+        priceRange: "₹160 - ₹200",
+        amazon: "https://www.amazon.in/Ponds-Energy-Charge-Face-Wash/dp/B073V4DCFN",
+        flipkart: "https://www.flipkart.com/ponds-men-energy-charge-face-wash/dp/itmfc930a2d842db",
+        image: "https://m.media-amazon.com/images/I/61+tXAZqF9L._SL1500_.jpg",
+      },
+      {
+        id: 18,
+        brand: "Ponds",
+        name: "Pond's Age Miracle Day Cream",
+        priceRange: "₹500 - ₹649",
+        amazon: "https://www.amazon.in/Ponds-Age-Miracle-Day-Cream/dp/B0191XD0YU",
+        flipkart: "https://www.flipkart.com/ponds-age-miracle-day-cream/p/itmfg8j4jw3z54ta",
+        image: "https://m.media-amazon.com/images/I/61XbhcvlynL._SL1500_.jpg",
+      }
+    ];
+
+    const productGrid = document.getElementById('product-grid');
+
+    function createProductCard(product) {
+      const article = document.createElement('article');
+      article.className = 'product-card';
+      article.setAttribute('role', 'listitem');
+      article.setAttribute('aria-label', product.name);
+      article.dataset.brand = product.brand;
+
+      article.innerHTML = `
+        <img class="product-img" src="${product.image}" alt="${product.name}" />
+        <div class="product-info">
+          <h3 class="product-name">${product.name}</h3>
+          <div class="product-price">${product.priceRange}</div>
+          <div class="product-links">
+            <a href="${product.amazon}" target="_blank" rel="noopener noreferrer" aria-label="Open ${product.name} product on Amazon">Amazon</a>
+            <a href="${product.flipkart}" target="_blank" rel="noopener noreferrer" aria-label="Open ${product.name} product on Flipkart">Flipkart</a>
+            <button class="add-cart-btn" aria-label="Add ${product.name} to cart">Add to cart</button>
+          </div>
+        </div>
+      `;
+      return article;
+    }
+
+    function renderProducts(filterText = '', filterBrand = 'all') {
+      productGrid.innerHTML = '';
+      const filteredProducts = products.filter(product => {
+        const matchesText = product.name.toLowerCase().includes(filterText.toLowerCase());
+        const matchesBrand = filterBrand === 'all' || product.brand.toLowerCase() === filterBrand.toLowerCase();
+        return matchesText && matchesBrand;
+      });
+      if (filteredProducts.length === 0) {
+        productGrid.innerHTML = '<p style="color:#555; font-weight:600; grid-column:1/-1;">No products found matching your search/filter.</p>';
+        return;
+      }
+      filteredProducts.forEach(product => {
+        productGrid.appendChild(createProductCard(product));
+      });
+      attachAddToCartButtons();
+    }
+
+    // Search and filter listeners
+    const searchInput = document.getElementById('search-input');
+    const brandFilter = document.getElementById('brand-filter');
+    searchInput.addEventListener('input', () => {
+      renderProducts(searchInput.value, brandFilter.value);
+    });
+    brandFilter.addEventListener('change', () => {
+      renderProducts(searchInput.value, brandFilter.value);
+    });
+
+    // Shopping Cart logic
+    const cartButton = document.getElementById('cart-button');
+    const cartPanel = document.getElementById('cart-panel');
+    const cartCloseButton = document.getElementById('cart-close-button');
+    const cartItemsContainer = document.getElementById('cart-items');
+    const cartFooter = document.getElementById('cart-footer');
+    const navCartButton = document.getElementById('nav-cart');
+
+    // Cart data structure: {productId: quantity}
+    let cart = {};
+
+    function updateCartDisplay() {
+      cartItemsContainer.innerHTML = '';
+      const keys = Object.keys(cart);
+      if (keys.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="cart-empty">Your cart is empty.</p>';
+        cartFooter.textContent = '';
+        return;
+      }
+      let totalPrice = 0;
+      keys.forEach(id => {
+        const product = products.find(p => p.id == id);
+        const quantity = cart[id];
+        let priceNum = extractPrice(product.priceRange);
+        const subtotal = priceNum * quantity;
+        totalPrice += subtotal;
+        const itemDiv = document.createElement('div');
+        itemDiv.className = 'cart-item';
+        itemDiv.innerHTML = `
+          <div class="cart-item-name">${product.name} x${quantity}</div>
+          <div>₹${(subtotal).toFixed(0)}</div>
+          <button class="cart-item-remove" aria-label="Remove one ${product.name} from cart" data-id="${product.id}">&times;</button>
+        `;
+        cartItemsContainer.appendChild(itemDiv);
+      });
+      cartFooter.textContent = 'Estimated Total: ₹' + totalPrice.toFixed(0);
+      attachRemoveButtons();
+    }
+
+    function extractPrice(priceRange) {
+      // Extract smallest number from price range string like "₹599 - ₹750"
+      const matches = priceRange.match(/\d+/g);
+      if (matches && matches.length > 0) {
+        // Use the lowest price as base price
+        return parseInt(matches[0]);
+      }
+      return 0;
+    }
+
+    function attachAddToCartButtons() {
+      document.querySelectorAll('.add-cart-btn').forEach(button => {
+        button.addEventListener('click', () => {
+          const card = button.closest('.product-card');
+          const productName = card.querySelector('.product-name').textContent;
+          const productId = products.find(p => p.name === productName).id;
+          if (!cart[productId]) {
+            cart[productId] = 0;
+          }
+          cart[productId] += 1;
+          updateCartDisplay();
+          openCart();
+        });
+      });
+    }
+
+    function attachRemoveButtons() {
+      document.querySelectorAll('.cart-item-remove').forEach(button => {
+        button.addEventListener('click', () => {
+          const id = button.getAttribute('data-id');
+          if (!cart[id]) return;
+          cart[id] -= 1;
+          if (cart[id] <= 0) {
+            delete cart[id];
+          }
+          updateCartDisplay();
+        });
+      });
+    }
+
+    function openCart() {
+      cartPanel.classList.add('open');
+      cartPanel.setAttribute('aria-hidden', 'false');
+      cartButton.setAttribute('aria-expanded', 'true');
+      navCartButton.setAttribute('aria-expanded', 'true');
+    }
+
+    function closeCart() {
+      cartPanel.classList.remove('open');
+      cartPanel.setAttribute('aria-hidden', 'true');
+      cartButton.setAttribute('aria-expanded', 'false');
+      navCartButton.setAttribute('aria-expanded', 'false');
+      cartButton.focus();
+    }
+
+    cartButton.addEventListener('click', () => {
+      if (cartPanel.classList.contains('open')) {
+        closeCart();
+      } else {
+        openCart();
+      }
+    });
+
+    navCartButton.addEventListener('click', () => {
+      if (cartPanel.classList.contains('open')) {
+        closeCart();
+      } else {
+        openCart();
+      }
+    });
+
+    cartCloseButton.addEventListener('click', closeCart);
+
+    // Close cart on Escape key
+    document.addEventListener('keydown', e => {
+      if (e.key === 'Escape' && cartPanel.classList.contains('open')) {
+        closeCart();
+      }
+    });
+
+    // Initialize
+    renderProducts();
+    updateCartDisplay();
+  </script>
+</body>
+</html>
+
